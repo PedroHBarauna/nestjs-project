@@ -32,9 +32,16 @@ export class UsuarioService {
     }
 
     async buscaUsuarioPorId(id: mongoose.Types.ObjectId): Promise<Usuario>{
-        return await this.UsuarioModel.findById(id).exec();
+        const dadosDoUsuario = await this.UsuarioModel.findById(id).exec();
+        delete dadosDoUsuario?.senha;
+        return dadosDoUsuario;
     }
 
+    async buscaUsuarioPorEmail(email: string): Promise<Usuario>{
+        const dadosDoUsuario = await this.UsuarioModel.findOne({email: email}).exec();
+        delete dadosDoUsuario?.senha;
+        return dadosDoUsuario;
+    }
     async atualizaUsuario(id: mongoose.Types.ObjectId, objetoUpdate){
         return await this.UsuarioModel.updateOne({_id: id}, objetoUpdate);
     }
