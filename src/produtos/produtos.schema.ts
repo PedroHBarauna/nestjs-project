@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { CaracteristicasProdutoDto } from './dtos/classes/CaracteristicasProduto.dto';
+import { CaracteristicasImagemDto } from './dtos/classes/CaracteristicasImagem.dto';
 
 
 export type ProdutosDocument = Produtos & Document;
@@ -10,19 +12,28 @@ export class Produtos {
     nome: string;
 
     @Prop()
-    preco: number;
+    valor: number;
 
     @Prop()
-    idUsuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario'
-    }
+    quantidadeDisponivel: number;
 
     @Prop()
-    email: {
-        type: mongoose.Schema.Types.String,
-        ref: 'Usuario'
-    }
+    descricao: string;
+
+    @Prop()
+    caracteristicas: CaracteristicasProdutoDto[];
+
+    @Prop()
+    imagens: CaracteristicasImagemDto[];
+
+    @Prop()
+    categoria: string;
+
+    @Prop()
+    dataCriacao: Date;
+
+    @Prop()
+    dataAtualizacao: Date;
 }
 
 export const ProdutosSchema = SchemaFactory.createForClass(Produtos);

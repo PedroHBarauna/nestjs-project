@@ -1,5 +1,7 @@
 import { Param, Body, Controller, Get, Post, Put, Delete } from "@nestjs/common";
 import { UsuarioService } from "src/usuario/usuario.service";
+import { CriaUsuarioDto } from "./dtos/request/CriaUsuarioRequest.dto";
+import mongoose from "mongoose";
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -17,8 +19,9 @@ export class UsuarioController {
     }
 
     @Post()
-    async criaUsuario(@Body() dadosUsuario){
+    async criaUsuario(@Body() dadosUsuario: CriaUsuarioDto){
         try{
+            dadosUsuario['dataCriacao'] = new Date().toUTCString();
             await this.usuarioService.criaUsuario(dadosUsuario);
             return;
         }
@@ -28,7 +31,7 @@ export class UsuarioController {
     }
 
     @Post('/login')
-    async login(@Body() dadosUsuario){
+    async login(@Body() dadosUsuario: CriaUsuarioDto){
         try{
             const result = await this.usuarioService.login(dadosUsuario);
             return result;
@@ -38,18 +41,20 @@ export class UsuarioController {
         }
     }
 
-    @Put()
-    async atualizaUsuario(@Param() id: number, @Body() dadosUsuario){
+    @Put('/:id')
+    async atualizaUsuario(@Param() id: mongoose.Types.ObjectId, @Body() dadosUsuario){
         try{
-            await this.usuarioService.atualizaUsuario(id, dadosUsuario);
+            dadosUsuario['dataAtualizacao'] = new Date().toUTCString();
+            const dadosAtualizados = await this.usuarioService.atualizaUsuario(id, dadosUsuario);
+            return dadosAtualizados;
         }
         catch(error){
             return error.toString();
         }
     }
 
-    @Delete()
-    async deletaUsuario(@Param() id: number){
+    @Delete('/:id')
+    async deletaUsuario(@Param() id: mongoose.Types.ObjectId){
         try{
             await this.usuarioService.deletaUsuario(id);
         }
