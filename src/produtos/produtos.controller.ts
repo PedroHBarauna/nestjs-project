@@ -1,8 +1,8 @@
 import { Param, Body, Controller, Get, Post, Put, Delete } from "@nestjs/common";
 import { ProdutosService } from "src/produtos/produtos.service";
-import { CriaProdutoRequest } from "./dtos/request/CriaProdutoRequest.dto";
-import moment from "moment";
+import { CriaProdutoRequestDto } from "./dtos/request/CriaProdutoRequest.dto";
 import mongoose from "mongoose";
+import { AtualizaProdutoRequestDto } from "./dtos/request/AtualizaProdutoRequest.dto";
 
 @Controller('/produtos')
 export class ProdutosController {
@@ -20,7 +20,7 @@ export class ProdutosController {
     }
 
     @Post()
-    async criaProdutos(@Body() dadosProduto: CriaProdutoRequest){
+    async criaProdutos(@Body() dadosProduto: CriaProdutoRequestDto){
         try{
             dadosProduto['dataCriacao'] = new Date().toUTCString();
             const dadosCriacao = await this.ProdutosService.criaProdutos(dadosProduto);
@@ -32,7 +32,7 @@ export class ProdutosController {
     }
 
     @Put('/:id')
-    async atualizaProduto(@Param() id: mongoose.Types.ObjectId, @Body() dadosProduto){
+    async atualizaProduto(@Param() id: mongoose.Types.ObjectId, @Body() dadosProduto: AtualizaProdutoRequestDto){
         try{
             dadosProduto['dataAtualizacao'] = new Date().toUTCString();
             const dadosAtualizados = await this.ProdutosService.atualizaProduto(id, dadosProduto);

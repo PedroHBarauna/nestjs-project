@@ -1,34 +1,37 @@
-import { IsString, IsNumber, IsArray, ValidateNested, IsNotEmpty } from "class-validator";
+import { IsOptional, IsNumber, IsArray, ValidateNested, IsNotEmpty } from "class-validator";
 import { CaracteristicasImagemDto } from "../classes/CaracteristicasImagem.dto";
 import { CaracteristicasProdutoDto } from "../classes/CaracteristicasProduto.dto";
-import mongoose from "mongoose";
 
-export class CriaProdutoRequestDto {
+export class AtualizaProdutoRequestDto {
     @IsNotEmpty()
-    usuarioId: mongoose.Types.ObjectId;
-    
-    @IsNotEmpty()
+    @IsOptional()
     nome: string;
 
     @IsNumber()
     @IsNotEmpty()
+    @IsOptional()
     valor: number;
 
     @IsNumber()
     @IsNotEmpty()
+    @IsOptional()
     quantidadeDisponivel: number;
 
-    @IsString()
+    @IsNotEmpty()
+    @IsOptional()
     descricao: string;
 
     @ValidateNested()
     @IsArray()
+    @IsOptional()
     caracteristicas: CaracteristicasProdutoDto[];
 
     @ValidateNested()
     @IsArray()
+    @IsOptional()
     imagens: CaracteristicasImagemDto[];
 
     @IsNotEmpty()
+    @IsOptional()
     categoria: string;
 }

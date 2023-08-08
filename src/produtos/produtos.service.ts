@@ -16,7 +16,7 @@ export class ProdutosService {
         return await this.ProdutosModel.create(dadosProduto);
     }
 
-    async atualizaProduto(id: mongoose.Types.ObjectId, dadosProduto){
+    async atualizaProduto(id: mongoose.Types.ObjectId, dadosProduto: Partial<Produtos>){
         return await this.ProdutosModel.updateOne({_id: id}, dadosProduto);
     }
 

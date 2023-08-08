@@ -1,7 +1,9 @@
 import { Param, Body, Controller, Get, Post, Put, Delete } from "@nestjs/common";
 import { UsuarioService } from "src/usuario/usuario.service";
-import { CriaUsuarioDto } from "./dtos/request/CriaUsuarioRequest.dto";
+import { CriaUsuarioRequestDto } from "./dtos/request/CriaUsuarioRequest.dto";
 import mongoose from "mongoose";
+import { ListaUsuarioResponseDto } from "./dtos/response/ListaUsuarioResponse.dto";
+import { AtualizaUsuarioRequestDto } from "./dtos/request/AtualizaUsuarioRequest.dto";
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -11,7 +13,8 @@ export class UsuarioController {
     async listaUsuario(){
         try{
             const usuarios = await this.usuarioService.listaUsuario();
-            return usuarios;
+            const usuariosListados = usuarios.map(usuario => new ListaUsuarioResponseDto(usuario['_id'], usuario['nome']));
+            return usuariosListados;
         }
         catch(error){
             return error.toString();
@@ -19,11 +22,11 @@ export class UsuarioController {
     }
 
     @Post()
-    async criaUsuario(@Body() dadosUsuario: CriaUsuarioDto){
+    async criaUsuario(@Body() dadosUsuario: CriaUsuarioRequestDto){
         try{
             dadosUsuario['dataCriacao'] = new Date().toUTCString();
-            await this.usuarioService.criaUsuario(dadosUsuario);
-            return;
+            const usuarioCriado = await this.usuarioService.criaUsuario(dadosUsuario);
+            return {id: usuarioCriado['_id']};
         }
         catch(error){
             return error.toString();
@@ -31,7 +34,7 @@ export class UsuarioController {
     }
 
     @Post('/login')
-    async login(@Body() dadosUsuario: CriaUsuarioDto){
+    async login(@Body() dadosUsuario: CriaUsuarioRequestDto){
         try{
             const result = await this.usuarioService.login(dadosUsuario);
             return result;
@@ -42,7 +45,7 @@ export class UsuarioController {
     }
 
     @Put('/:id')
-    async atualizaUsuario(@Param() id: mongoose.Types.ObjectId, @Body() dadosUsuario){
+    async atualizaUsuario(@Param() id: mongoose.Types.ObjectId, @Body() dadosUsuario: AtualizaUsuarioRequestDto){
         try{
             dadosUsuario['dataAtualizacao'] = new Date().toUTCString();
             const dadosAtualizados = await this.usuarioService.atualizaUsuario(id, dadosUsuario);

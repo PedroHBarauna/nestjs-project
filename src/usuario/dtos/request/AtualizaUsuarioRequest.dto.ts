@@ -1,17 +1,18 @@
-import { IsEmail, MinLength, IsNotEmpty } from "class-validator";
+import { IsOptional, IsEmail, MinLength, IsNotEmpty } from "class-validator";
 import { EmailUnico } from "src/usuario/validacao/EmailUnico.validator";
 
-export class CriaUsuarioRequestDto {
+export class AtualizaUsuarioRequestDto {
 
     @IsNotEmpty()
+    @IsOptional()
     nome: string;
 
     @IsEmail()
-    @IsNotEmpty()
     @EmailUnico({message: 'Email já cadastrado'})
+    @IsOptional()
     email: string;
 
     @MinLength(6)
-    @IsNotEmpty()
+    @IsOptional()
     senha: string;
 }
